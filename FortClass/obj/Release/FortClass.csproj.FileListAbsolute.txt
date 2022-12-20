@@ -1,0 +1,6 @@
+D:\Fortnite Modding - Projects\FortClass\FortClass\bin\Release\FortClass.dll
+D:\Fortnite Modding - Projects\FortClass\FortClass\bin\Release\FortClass.pdb
+D:\Fortnite Modding - Projects\FortClass\FortClass\obj\Release\FortClass.csproj.AssemblyReference.cache
+D:\Fortnite Modding - Projects\FortClass\FortClass\obj\Release\FortClass.csproj.CoreCompileInputs.cache
+D:\Fortnite Modding - Projects\FortClass\FortClass\obj\Release\FortClass.dll
+D:\Fortnite Modding - Projects\FortClass\FortClass\obj\Release\FortClass.pdb
