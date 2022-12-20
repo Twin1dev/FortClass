@@ -26,25 +26,25 @@ namespace FortClass
         public static void Launch(string username, string path, string DownloadTo, string lawindll, string Consoledll)
         {
             #region Checks
-            Regex reg = new Regex("[^a-zA-Z0-9_.");
 
+            
             if (username.Contains(" "))
             {
                 MessageBox.Show("You have spaces in your username! Please change it to not have any, or just use underscores");
                 return;
-            } else if (!reg.IsMatch(username)) {
-                MessageBox.Show("You have special characters in your name! Please change it");
-            } else if (string.IsNullOrEmpty(username))
+            }
+            else if (string.IsNullOrEmpty(username))
             {
                 MessageBox.Show("Your name is empty! Please input your username.");
-            } else if (!Directory.Exists(path + "\\FortniteGame"))
+            }
+            else if (!Directory.Exists(path + "\\FortniteGame"))
             {
                 MessageBox.Show("The selected path does not have Fortnite! Make sure it has Engine and FortniteGame in it.");
             }
 
 
             #endregion
-            
+
 
             if (!File.Exists(DownloadTo + "\\FortniteClient-Win64-Shipping_BE.exe"))
             {
@@ -73,14 +73,14 @@ namespace FortClass
             proc.StartInfo.UseShellExecute = false;
             proc.Start();
 
-            Inject(proc.Id, Directory.GetCurrentDirectory() + $"\\{lawindll}");
+            Inject(proc.Id, lawindll);
             for (; ; )
             {
                 string output = proc.StandardOutput.ReadLine();
                 if (output.Contains("Game Engine Initialized"))
                 {
                     Thread.Sleep(5000);
-                    Inject(proc.Id, Directory.GetCurrentDirectory() + $"\\{Consoledll}");
+                    Inject(proc.Id, Consoledll);
                     Environment.Exit(0);
 
                 }
@@ -91,6 +91,7 @@ namespace FortClass
             if (!File.Exists(path))
             {
                 MessageBox.Show("DLL not found! Make sure your antivirus did not Remove it!");
+                return;
             }
             IntPtr hProcess = Win32.OpenProcess(1082, false, pid);
             IntPtr procAdress = Win32.GetProcAddress(Win32.GetModuleHandle("kernel32.dll"), "LoadLibraryA");
