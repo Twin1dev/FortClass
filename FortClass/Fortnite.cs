@@ -23,7 +23,7 @@ namespace FortClass
         /// <param name="DownloadTo">Download the special FN client for ssl</param>
         /// <param name="lawindll">Name of Cumar dll to inject.</param>
         /// <param name="Consoledll">Name of Console dll to inject.</param>
-        public static void Launch(string username, string path, string DownloadTo, string lawindll, string Consoledll)
+        public static void Launch(string username, string password, string path, string DownloadTo, string Consoledll, string lawindll = "", bool isHeadless = false, bool LawinServerV2 = false, string redirectdll = "", string AddedArgs = "", string gameserverDLL = "")
         {
             #region Checks
 
@@ -66,26 +66,42 @@ namespace FortClass
                 CreateNoWindow = true,
                 UseShellExecute = false
             });
+            if (isHeadless)
+                AddedArgs = "-log -nosplash -nosound -nullrhi";
             Process proc = new Process();
             proc.StartInfo.FileName = path + "\\FortniteGame\\Binaries\\Win64\\FortniteClient-Win64-Shipping.exe";
-            proc.StartInfo.Arguments = "-epicapp=Fortnite -epicenv=Prod -epicportal -AUTH_TYPE=epic -AUTH_LOGIN=" + username + " -AUTH_PASSWORD=unused -epiclocale=en-us -fltoken=7a848a93a74ba68876c36C1c -fromfl=none -noeac -nobe -skippatchcheck ";
+            proc.StartInfo.Arguments = "-epicapp=Fortnite -epicenv=Prod -epicportal -AUTH_TYPE=epic -AUTH_LOGIN=" + username + " -AUTH_PASSWORD=" + password + " -epiclocale=en-us -fltoken=7a848a93a74ba68876c36C1c -fromfl=none -noeac -nobe -skippatchcheck " + AddedArgs;
             proc.StartInfo.RedirectStandardOutput = true;
             proc.StartInfo.UseShellExecute = false;
             proc.Start();
-
-            Inject(proc.Id, lawindll);
+            if (lawindll != "")
+                Inject(proc.Id, lawindll);
+            if (LawinServerV2)
+                Inject(proc.Id, redirectdll);
             for (; ; )
             {
                 string output = proc.StandardOutput.ReadLine();
                 if (output.Contains("Game Engine Initialized"))
                 {
-                    Thread.Sleep(5000);
-                    Inject(proc.Id, Consoledll);
-                    Environment.Exit(0);
+                    if (!isHeadless)
+                    {
+                        Thread.Sleep(5000);
+                        Inject(proc.Id, Consoledll);
+                        Environment.Exit(0);
+                    }
+                    else
+                    {
+                        Thread.Sleep(5000);
+                        Inject(proc.Id, gameserverDLL);
+                        Environment.Exit(0);
+                    }
 
                 }
+
             }
         }
+
+
         public static void Inject(int pid, string path)
         {
             if (!File.Exists(path))
